@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Examples - Linnaeus</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Examples";
+    var mkdocs_page_input_path = "examples.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Linnaeus</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../home/">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../quick_tutorial/">Quick Tutorial</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../basic_types/">Basic Types</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../identification/">Identification</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Examples</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#examples">Examples</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#checking-equivalence-linear-transform">Checking equivalence (linear transform)</a></li>
+        
+            <li><a class="toctree-l3" href="#checking-permutation">Checking permutation</a></li>
+        
+            <li><a class="toctree-l3" href="#checking-repetition">Checking repetition</a></li>
+        
+            <li><a class="toctree-l3" href="#checking-conjugation">Checking conjugation</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Linnaeus</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Examples</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="examples">Examples</h1>
+<h2 id="checking-equivalence-linear-transform">Checking equivalence (linear transform)</h2>
+<pre><code class="python">import linnaeus as lin
+from linnaeus import Algorithm
+
+algo1 = Algorithm(&quot;algo1&quot;)
+x1, x2 = algo1.add_var(&quot;x1&quot;, &quot;x2&quot;)
+gradf = algo1.add_oracle(&quot;gradf&quot;)
+algo1.set_auto(False)
+# x1+ = 2x1 - x2 - 1/10*gradf(2x1 - x2)
+algo1.add_update(x1, 2 * x1 - x2 - 1/10 * gradf(2*x1 - x2))
+# x2+ = x1
+algo1.add_update(x2, x1)
+
+algo2 = Algorithm(&quot;algo2&quot;)
+y1, y2 = algo2.add_var(&quot;y1&quot;, &quot;y2&quot;)
+gradf = algo2.add_oracle(&quot;gradf&quot;)
+algo2.set_auto(False)
+# y1+ = y1 - y2 - 1/5*gradf(y1)
+algo2.add_update(y1, y1 - y2 - 1/5 * gradf(y1))
+# y2+ = y2 + 1/10*gradf(y1)
+algo2.add_update(y2, y2 + 1/10 * gradf(y1))
+
+algo1.parse()
+algo2.parse()
+lin.is_equivalent(algo1, algo2)
+</code></pre>
+
+<h2 id="checking-permutation">Checking permutation</h2>
+<pre><code class="python">import linnaeus as lin
+from linnaeus import Algorithm
+
+algo3 = Algorithm(&quot;algo3&quot;)
+x1, x2, x3 = algo3.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
+proxf, proxg = algo3.add_oracle(&quot;proxf&quot;, &quot;proxg&quot;)
+# x1 &lt;- proxf(x3)
+algo3.add_update(x1, proxf(x3))
+# x2 &lt;- proxg(2x1 - x3)
+algo3.add_update(x2, proxg(2 * x1 - x3))
+# x3 &lt;- x3 + x2 - x1
+algo3.add_update(x3, x3 + x2 - x1)
+
+algo4 = Algorithm(&quot;algo4&quot;)
+y1, y2 = algo4.add_var(&quot;y1&quot;, &quot;y2&quot;)
+proxf, proxg = algo4.add_oracle(&quot;proxf&quot;, &quot;proxg&quot;)
+# y1 &lt;- proxg(-y1 + 2y2) + y1 - y2
+algo4.add_update(y1, proxg(-y1 + 2 * y2) + y1 - y2)
+# y2 &lt;- proxf(y1)
+algo4.add_update(y2, proxf(y1))
+
+algo3.parse()
+algo4.parse()
+lin.is_permutation(algo3, algo4)
+</code></pre>
+
+<h2 id="checking-repetition">Checking repetition</h2>
+<pre><code class="python">import linnaeus as lin
+from linnaeus import Algorithm
+
+algo5 = Algorithm(&quot;algo5&quot;)
+t = algo5.add_parameter(&quot;t&quot;)
+x1 = algo5.add_var(&quot;x1&quot;)
+f = algo5.add_function(&quot;f&quot;)
+# x1 &lt;- x1 - t*gradf(x1)
+algo5.add_update(x1, x1 - t * lin.grad(f)(x1))
+
+algo6 = Algorithm(&quot;algo6&quot;)
+y1, y2 = algo6.add_var(&quot;y1&quot;, &quot;y2&quot;)
+t = algo6.add_parameter(&quot;t&quot;)
+f = algo6.add_function(&quot;f&quot;)
+# y2 &lt;- y1 - t*gradf(y1)
+algo6.add_update(y2, y1 - t * lin.grad(f)(y1))
+# y1 &lt;- y2 - t*gradf(y2)
+algo6.add_update(y1, y2 - t * lin.grad(f)(y2))
+
+algo5.parse()
+algo6.parse()
+lin.is_repetition(algo5, algo6)
+</code></pre>
+
+<h2 id="checking-conjugation">Checking conjugation</h2>
+<pre><code class="python">import linnaeus as lin
+from linnaeus import Algorithm
+
+algo7 = Algorithm(&quot;algo7&quot;)
+x1, x2, x3 = algo7.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
+t = algo7.add_parameter(&quot;t&quot;)
+f, g = algo7.add_function(&quot;f&quot;, &quot;g&quot;)
+# x1 &lt;- prox(f,t)(x3)
+algo7.add_update(x1, lin.prox(f, t)(x3)) 
+# x2 &lt;- prox(g,t)(2x1 - x3)
+algo7.add_update(x2, lin.prox(g, t)(2 * x1 - x3)) 
+# x3 &lt;- x3 + x2 - x1
+algo7.add_update(x3, x3 + x2 - x1)
+
+algo8 = Algorithm(&quot;algo8&quot;)
+t = algo8.add_parameter(&quot;t&quot;)
+f, g = algo8.add_function(&quot;f&quot;, &quot;g&quot;)
+t = algo8.add_parameter(&quot;t&quot;)
+x1, x2 = algo8.add_var(&quot;x1&quot;, &quot;x2&quot;)
+x1u = algo8.update(x1)
+algo8.set_auto(False)
+# x1+ = prox(f, t)(x1 - t * x2)
+algo8.add_update(x1, lin.prox(f, t)(x1 - t * x2))  
+# x2+ = prox(g, 1/t)(x2 + 1/t * (2x1+ - x1))
+algo8.add_update(x2, lin.prox(g, 1/t)(x2 + 1/t * (2 * x1u - x1)))
+
+algo7.parse()
+algo8.parse()
+lin.is_conjugation(algo7, algo8)
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="../identification/" class="btn btn-neutral" title="Identification"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../identification/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>

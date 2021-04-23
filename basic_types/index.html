@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Basic Types - Linnaeus</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Basic Types";
+    var mkdocs_page_input_path = "basic_types.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Linnaeus</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../home/">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../quick_tutorial/">Quick Tutorial</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Basic Types</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#basic-types">Basic Types</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#algorithms">Algorithms</a></li>
+        
+            <li><a class="toctree-l3" href="#variables">Variables</a></li>
+        
+            <li><a class="toctree-l3" href="#parameters">Parameters</a></li>
+        
+            <li><a class="toctree-l3" href="#oracles">Oracles</a></li>
+        
+            <li><a class="toctree-l3" href="#update-equations">Update equations</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../identification/">Identification</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../examples/">Examples</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Linnaeus</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Basic Types</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="basic-types">Basic Types</h1>
+<p>The major building block is called an algorithm. An algorithm consists of expressions 
+including variables, parameters, functions, oracles and update equations. Linnaeus is 
+developed based on python symbolic package sympy, and all the expressions are defined symbolically.</p>
+<h2 id="algorithms">Algorithms</h2>
+<p>Algorithm is the major building block. It can be defined using the keyword <code>Algorithm</code>
+along with the name of the algorithm. </p>
+<pre><code class="python"># import linnaeus and Algorithm class
+import linnaeus as lin
+from linnaeus import Algorithm
+# define an algorithm algo1 named as &quot;Algorithm 1&quot; 
+algo1 = Algorithm(&quot;Algorithm 1&quot;)
+</code></pre>
+
+<p>Expressions such as variables, parameters, functions, oracles and update equations 
+are all treated as attributes to an algorithm object. In other words, all the 
+expressions are algorithm specific and can only be used within its corresponding algorithm. 
+Further, the users must define an algorithm before they define
+other expressions.</p>
+<h2 id="variables">Variables</h2>
+<p>Variables are regarded as algorithm states. Variables are declared and added to an algorithm
+using syntax <code>add_var</code> along with the names of variables. </p>
+<p>Add variables $x_1$ and $x_2$ to <code>algo1</code>.</p>
+<pre><code class="python"># add variables x1 and x2 to algo1
+x1, x2 = algo1.add_var(&quot;x1&quot;, &quot;x2&quot;)
+</code></pre>
+
+<p>Each algorithm state must be updated during on each block of iteration. The
+updated variables can be accessed by syntax <code>update</code>.</p>
+<pre><code class="python"># get access to the updated versions of x1 and x2
+x1u, x2u = algo1.update(x1, x2)
+</code></pre>
+
+<h2 id="parameters">Parameters</h2>
+<p>Parameters can be a scalar, a vector or a matrix. The main difference between a scalar and
+a vector or a matrix is whether it is commutative. Parameters can be declared and added 
+to an algorithm using syntax <code>add_parameter</code> along with the names of parameters. 
+To add a vector or a matrix, the argument commutative should be set as False. 
+It is unnecessary to specify the size of the vector or the matrix, since they are all 
+regarded as abstract expressions. </p>
+<pre><code class="python">add a scalar parameter t
+t = algo1.add_parameter(&quot;t&quot;)
+# add a matrix parameter L
+L = algo1.add_parameter(&quot;L&quot;, commutative = False)
+</code></pre>
+
+<h2 id="oracles">Oracles</h2>
+<p>We assume an oracle model of optimization. Algorithm analysis results vary with different 
+levels of information acquired by oracles about the functions and the problem or in order 
+words different oracles. In Linnaeus, we provide two approaches to declare and add oracles 
+to an algorithm. The first approach is to define oracles in the top level as black boxes. 
+When parsing the algorithm, the system treats each oracle as a whole and does not care what 
+happens inside each oracle. Under this approach, an oracle can be declared and defined using 
+syntax <code>add_oracle</code>.</p>
+<pre><code class="python"># add oracle gradient of f in the first approach
+gradf = algo1.add_oracle(&quot;gradf&quot;)
+# add oracle prox of g in the first approach 
+proxg = algo1.add_oracle(&quot;proxg&quot;)
+</code></pre>
+
+<p>The second approach is to define oracles in the bottom level of gradients or subgradients. 
+When parsing an algorithm, all the oracles will be decomposed into gradients or subgradients 
+and the gradients or subgradients are treated as nonlinearities of the algorithm. 
+Under this approach, functions must be defined and added to the algorithm before defining 
+oracles. Syntax <code>add_function</code> is used to declare and add functions to an algorithm.</p>
+<pre><code class="python"># add function f
+f = algo1.add_function(&quot;f&quot;)
+</code></pre>
+
+<p>We provide four types of oracles that can be decomposed into gradients or subgradients including </p>
+<ul>
+<li>Gradient with syntax <code>grad</code></li>
+<li>Proximal operator with syntax <code>prox</code></li>
+<li>Projection with syntax <code>proj</code></li>
+<li>Argmin operator with syntax <code>argmin</code></li>
+</ul>
+<pre><code class="python"># gradient of f with respect to x1 
+lin.grad(f)(x1)
+# prox of f with respect to x2 and parameter t 
+lin.prox(f,t)(x2)
+# projection x1 onto set C
+lin.proj(C)(x1)
+# argmin of f(x) + g(x)
+lin.argmin(x, f(x) + g(x))
+</code></pre>
+
+<h2 id="update-equations">Update equations</h2>
+<p>Update equations define the iterative procedures of an algorithm. Since all the algorithm
+states must be updated within each block of iteration, all the update equations have common 
+structure that an updated variable equals an expression of variables, parameters and oracles. 
+We can declare and add an update equation by syntax <code>add_update</code>. </p>
+<pre><code class="python"># add update equation
+algo1.add_update(x1, x2 - gradf(x2)) # x1 &lt;- x2 - gradf(x2) 
+algo1.add_update(x2, x1 + proxg(x1)) # x2 &lt;- x1 + proxg(x1)
+</code></pre>
+
+<p>By default setting, variables which have already been updated will be substituted with their
+updated versions. Thus, x1 in the second update equation is interpreted as the updated x1. 
+For some cases, we can change the default setting by syntax <code>set_auto</code>. </p>
+<pre><code class="python"># change default setting of auto
+algo1.set_auto(False)
+</code></pre>
+
+<p>Under this condition, we have a different interpretation of the update equations. </p>
+<pre><code class="python">algo1.set_auto(False)
+algo1.add_update(x1, x2 - gradf(x2)) # x1+ = x2 - gradf(x2) 
+algo1.add_update(x2, x1 + proxg(x1)) # x2+ = x1 + proxg(x1)
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../identification/" class="btn btn-neutral float-right" title="Identification">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../quick_tutorial/" class="btn btn-neutral" title="Quick Tutorial"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../quick_tutorial/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../identification/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
+
+</body>
+</html>
