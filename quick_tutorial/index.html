@@ -71,7 +71,7 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="../identification/">Identification</a>
+    <a class="" href="../detection/">Detection</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -112,43 +112,71 @@
             <div class="section">
               
                 <h1 id="quick-tutorial">Quick Tutorial</h1>
-<p>In this quick tutorial, we define two algorithms and check equivalence. </p>
-<p>Define the first algorithm :</p>
-<pre><code class="python"># import linnaeus and Algorithm class
-import linnaeus as lin
+<p>In this quick tutorial, we define two algorithms and check oracle equivalence. </p>
+<p>The first algorithm, </p>
+<p><img src="/Figures/algo1.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
+<p>Import <code>linnaeus</code> and <code>Algorithm</code> class,</p>
+<pre><code class="python">import linnaeus as lin
 from linnaeus import Algorithm
-
-# define the first algorithm
-algo1 = Algorithm(&quot;algo1&quot;)
-# define variables
-x1, x2, x3 = algo3.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
-# define oracle gradf
-gradf = algo3.add_oracle(&quot;gradf&quot;)
-
-# add update equations
-algo3.add_update(x3, x2) # x3 &lt;- x2
-algo3.add_update(x2, x1) # x2 &lt;- x1
-algo3.add_update(x1, 3 * x1 - 2 * x3 + 1/5 * gradf(-x1 + 2 * x3)) # x1 &lt;- 3x1 - 2x3 + 1/5*gradf(-x1 + 2x3)
-
-# parse the algorithm
-algo3.parse()
 </code></pre>
 
-<p>Define the second algorithm :</p>
-<pre><code class="python">algo2 = Algorithm(&quot;algo2&quot;)
-y1 = algo2.add_var(&quot;y1&quot;)
+<p>Define the first algorithm as <code>algo1</code> with name <code>Algoritm 1</code>,</p>
+<pre><code class="python">algo1 = Algorithm(&quot;Algorithm 1&quot;)
+</code></pre>
+
+<p>Add variables <code>x1</code>, <code>x2</code>, and <code>x3</code> to <code>algo1</code>,</p>
+<pre><code class="python">x1, x2, x3 = algo1.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
+</code></pre>
+
+<p>Add oracle <code>gradf</code>, gradient of <code>f</code>:</p>
+<pre><code class="python">gradf = algo1.add_oracle(&quot;gradf&quot;)
+</code></pre>
+
+<p>Add update equations:</p>
+<pre><code class="python"># x3 &lt;- 2x1 - x2 
+algo1.add_update(x3, 2*x1 - x2)  
+# x2 &lt;- x1
+algo1.add_update(x2, x1)  
+# x1 &lt;- x3 - 1/10*gradf(x3)
+algo1.add_update(x1, x3 - 1/10*gradf(x3))  
+</code></pre>
+
+<p>Parse <code>algo1</code>:</p>
+<pre><code class="python">algo1.parse()
+</code></pre>
+
+<p>Systerm returns the state-space realization of <code>algo1</code>, </p>
+<p><img src="/Figures/title1.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
+<p><img src="/Figures/output1.svg?invert_in_darkmode" align=middle width="320" height="320"/></p>
+<p>The second algorithm,</p>
+<p><img src="/Figures/algo2.svg?invert_in_darkmode" align=middle width="150" height="150"/></p>
+<p>Define the second algorithm as <code>algo2</code> and parse it:</p>
+<pre><code class="python">algo2 = Algorithm(&quot;Algorithm 2&quot;)
+xi1 = algo2.add_var(&quot;xi1&quot;)
 gradf = algo2.add_oracle(&quot;gradf&quot;)
 
-algo2.add_update(y1, y1 - 1/5 * gradf(y1)) # y1 &lt;- y1 - 1/5*gradf(y1)
+# xi3 &lt;- xi1
+algo2.add_update(xi3, xi1)
+# xi1 &lt;- xi1 - xi2 - 1/5*gradf(xi1)
+algo2.add_update(xi1, xi1 - xi2 - 1/5*gradf(xi3))  
+# xi2 &lt;- xi2 + 1/10*gradf(xi3)
+algo2.add_update(xi2, xi2 + 1/10*gradf(xi3))  
 
 algo2.parse()
 </code></pre>
 
-<p>Check equivalence : </p>
+<p>System returns the state-space realization of <code>algo2</code>,</p>
+<p><img src="/Figures/title2.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
+<p><img src="/Figures/output2.svg?invert_in_darkmode" align=middle width="320" height="320"/></p>
+<p>Check oracle equivalence : </p>
 <pre><code class="python">lin.is_equivalent(algo1, algo2)
 </code></pre>
 
-<p>Return is <code>True</code>.</p>
+<p>System returns </p>
+<pre><code class="python">True
+</code></pre>
+
+<p>which means that <code>algo1</code> and <code>algo2</code> are oracle-equivalent. </p>
               
             </div>
           </div>

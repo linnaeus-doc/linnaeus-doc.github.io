@@ -79,7 +79,7 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="identification/">Identification</a>
+    <a class="" href="detection/">Detection</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -122,27 +122,45 @@
                 <h1 id="linnaeus">Linnaeus</h1>
 <p>Linnaeus is a python package for the classification of iterative algorithms and 
 identification of relations between algorithms. 
-Users can describe an algorithm in natural, mathematical syntax with variables, 
-parameters, functions, oracles and update equations. The system will automatically 
-translate the input algorithm into a canonical form and use the canonical form to parse 
-the algorithm along with classification and identification of equivalence and 
-transformations. Linnaeus can check algorithm relations including</p>
+Algorithms are described with variables, 
+parameters, functions, oracles and update equations. 
+Linnaeus can check algorithm relations including</p>
 <ul>
-<li>Equivalence (oracle equivalence)</li>
-<li>Linear transform (linear state equivalence)</li>
-<li>Permutation (shift equivalence)</li>
-<li>Repetition </li>
-<li>Duality</li>
-<li>Conjugation</li>
+<li>Oracle equivalence (algorithms generate identical sequence of oracle calls)</li>
+<li>Linear state transform (states are identical up to a linear map)</li>
+<li>Permutation (shift equivalence, algorithms generate identical sequence of oracle calls up to a shift)</li>
+<li>Repetition (one algorithm repeats the updates of another algorithm)</li>
+<li>Conjugation (algorithm calls conjugate function oracles, i.e. Fenchel conjugate)</li>
+<li>Duality (conjugation on all algorithm oracles)</li>
 </ul>
+<p>For more information about algorithm equivalence and relations, see our paper. </p>
 <h2 id="installation">Installation</h2>
-<p>Installing Linnaeus using pip from github :</p>
+<p>To install using pip, run:</p>
 <pre><code class="python">pip install git+https://github.com/QCGroup/linnaeus
 </code></pre>
 
+<p>To install from source, first make sure setuptools has been installed. Then,</p>
+<ol>
+<li>Clone the Linnaeus git repo.</li>
+<li>Navigate to the top-level of the directory and run:</li>
+</ol>
+<pre><code class="python">python setup.py install
+</code></pre>
+
+<p>To test the installation with nose2, first make sure nose2 has been installed. Then run:</p>
+<pre><code class="python">nose2 linnaeus
+</code></pre>
+
+<p>The requirements are:</p>
+<ul>
+<li>SymPy &gt;= 1.6.2</li>
+<li>NumPy &gt;= 1.16</li>
+<li>SciPy &gt;= 1.2.1</li>
+<li>Python 3.x</li>
+</ul>
 <h2 id="algorithm-library">Algorithm library</h2>
-<p>Linnaeus include an algorithm library to serve as a search engine. Users can check the 
-potential relations between the input algorithm and algorithms in the library. 
+<p>Linnaeus include an algorithm library to serve as a reference. Users can check the 
+potential relations between the input algorithm and reference algorithms in the library. 
 Currently, the algorithm library includes:</p>
 <ul>
 <li>Gradient descent method</li>
@@ -152,7 +170,7 @@ Currently, the algorithm library includes:</p>
 <li>Proximal gradient method (ISTA, FISTA)</li>
 <li>Douglas-Rachford splitting method (with different versions)</li>
 <li>Peaceman-Rachford splitting method</li>
-<li>ADMM </li>
+<li>Alternating direction method of multipliers (ADMM)</li>
 <li>Chambolle-Pock method</li>
 <li>Davis-Yin splitting method</li>
 <li>Extragradient method (with different versions)</li>
@@ -205,5 +223,5 @@ Currently, the algorithm library includes:</p>
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2021-04-23 04:37:08
+Build Date UTC : 2021-04-26 16:58:14
 -->

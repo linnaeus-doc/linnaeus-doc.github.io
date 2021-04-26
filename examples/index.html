@@ -65,7 +65,7 @@
           
             <li class="toctree-l1">
 		
-    <a class="" href="../identification/">Identification</a>
+    <a class="" href="../detection/">Detection</a>
 	    </li>
           
             <li class="toctree-l1 current">
@@ -77,13 +77,13 @@
     
         <ul>
         
-            <li><a class="toctree-l3" href="#checking-equivalence-linear-transform">Checking equivalence (linear transform)</a></li>
+            <li><a class="toctree-l3" href="#check-permutation">Check permutation</a></li>
         
-            <li><a class="toctree-l3" href="#checking-permutation">Checking permutation</a></li>
+            <li><a class="toctree-l3" href="#check-repetition">Check repetition</a></li>
         
-            <li><a class="toctree-l3" href="#checking-repetition">Checking repetition</a></li>
+            <li><a class="toctree-l3" href="#check-conjugation-and-permutation-douglas-rachford-splitting-and-admm">Check conjugation and permutation (Douglas-Rachford splitting and ADMM)</a></li>
         
-            <li><a class="toctree-l3" href="#checking-conjugation">Checking conjugation</a></li>
+            <li><a class="toctree-l3" href="#check-conjugation-douglas-rachdford-splitting-and-chambolle-pock-method">Check conjugation (Douglas-Rachdford splitting and Chambolle-Pock method)</a></li>
         
         </ul>
     
@@ -124,116 +124,120 @@
             <div class="section">
               
                 <h1 id="examples">Examples</h1>
-<h2 id="checking-equivalence-linear-transform">Checking equivalence (linear transform)</h2>
-<pre><code class="python">import linnaeus as lin
-from linnaeus import Algorithm
-
-algo1 = Algorithm(&quot;algo1&quot;)
-x1, x2 = algo1.add_var(&quot;x1&quot;, &quot;x2&quot;)
-gradf = algo1.add_oracle(&quot;gradf&quot;)
-algo1.set_auto(False)
-# x1+ = 2x1 - x2 - 1/10*gradf(2x1 - x2)
-algo1.add_update(x1, 2 * x1 - x2 - 1/10 * gradf(2*x1 - x2))
-# x2+ = x1
-algo1.add_update(x2, x1)
-
-algo2 = Algorithm(&quot;algo2&quot;)
-y1, y2 = algo2.add_var(&quot;y1&quot;, &quot;y2&quot;)
-gradf = algo2.add_oracle(&quot;gradf&quot;)
-algo2.set_auto(False)
-# y1+ = y1 - y2 - 1/5*gradf(y1)
-algo2.add_update(y1, y1 - y2 - 1/5 * gradf(y1))
-# y2+ = y2 + 1/10*gradf(y1)
-algo2.add_update(y2, y2 + 1/10 * gradf(y1))
-
-algo1.parse()
-algo2.parse()
-lin.is_equivalent(algo1, algo2)
-</code></pre>
-
-<h2 id="checking-permutation">Checking permutation</h2>
-<pre><code class="python">import linnaeus as lin
-from linnaeus import Algorithm
-
-algo3 = Algorithm(&quot;algo3&quot;)
-x1, x2, x3 = algo3.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
-proxf, proxg = algo3.add_oracle(&quot;proxf&quot;, &quot;proxg&quot;)
-# x1 &lt;- proxf(x3)
-algo3.add_update(x1, proxf(x3))
-# x2 &lt;- proxg(2x1 - x3)
-algo3.add_update(x2, proxg(2 * x1 - x3))
-# x3 &lt;- x3 + x2 - x1
-algo3.add_update(x3, x3 + x2 - x1)
-
-algo4 = Algorithm(&quot;algo4&quot;)
-y1, y2 = algo4.add_var(&quot;y1&quot;, &quot;y2&quot;)
-proxf, proxg = algo4.add_oracle(&quot;proxf&quot;, &quot;proxg&quot;)
-# y1 &lt;- proxg(-y1 + 2y2) + y1 - y2
-algo4.add_update(y1, proxg(-y1 + 2 * y2) + y1 - y2)
-# y2 &lt;- proxf(y1)
-algo4.add_update(y2, proxf(y1))
-
-algo3.parse()
-algo4.parse()
-lin.is_permutation(algo3, algo4)
-</code></pre>
-
-<h2 id="checking-repetition">Checking repetition</h2>
+<h2 id="check-permutation">Check permutation</h2>
+<p><code>algo5</code></p>
+<p><img src="/Figures/algo5.svg?invert_in_darkmode" align=middle width="160" height="160"/></p>
+<p><code>algo6</code></p>
+<p><img src="/Figures/algo6.svg?invert_in_darkmode" align=middle width="240" height="240"/></p>
 <pre><code class="python">import linnaeus as lin
 from linnaeus import Algorithm
 
 algo5 = Algorithm(&quot;algo5&quot;)
-t = algo5.add_parameter(&quot;t&quot;)
-x1 = algo5.add_var(&quot;x1&quot;)
-f = algo5.add_function(&quot;f&quot;)
-# x1 &lt;- x1 - t*gradf(x1)
-algo5.add_update(x1, x1 - t * lin.grad(f)(x1))
+x1, x2, x3 = algo3.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
+proxf, proxg = algo3.add_oracle(&quot;proxf&quot;, &quot;proxg&quot;)
+algo5.add_update(x1, proxf(x3))
+algo5.add_update(x2, proxg(2*x1 - x3))
+algo5.add_update(x3, x3 + x2 - x1)
 
 algo6 = Algorithm(&quot;algo6&quot;)
-y1, y2 = algo6.add_var(&quot;y1&quot;, &quot;y2&quot;)
-t = algo6.add_parameter(&quot;t&quot;)
-f = algo6.add_function(&quot;f&quot;)
-# y2 &lt;- y1 - t*gradf(y1)
-algo6.add_update(y2, y1 - t * lin.grad(f)(y1))
-# y1 &lt;- y2 - t*gradf(y2)
-algo6.add_update(y1, y2 - t * lin.grad(f)(y2))
+xi1, xi2 = algo6.add_var(&quot;xi1&quot;, &quot;xi2&quot;)
+proxf, proxg = algo6.add_oracle(&quot;proxf&quot;, &quot;proxg&quot;)
+algo6.add_update(xi1, proxg(-xi1 + 2*xi2) + xi1 - xi2)
+algo6.add_update(xi2, proxf(xi1))
 
 algo5.parse()
 algo6.parse()
-lin.is_repetition(algo5, algo6)
+lin.is_permutation(algo5, algo6)
 </code></pre>
 
-<h2 id="checking-conjugation">Checking conjugation</h2>
-<pre><code class="python">import linnaeus as lin
-from linnaeus import Algorithm
+<p>System returns</p>
+<pre><code class="python">True
+</code></pre>
 
-algo7 = Algorithm(&quot;algo7&quot;)
-x1, x2, x3 = algo7.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
+<h2 id="check-repetition">Check repetition</h2>
+<p><code>algo7</code></p>
+<p><img src="/Figures/algo7.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
+<p><code>algo8</code></p>
+<p><img src="/Figures/algo8.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
+<pre><code class="python">algo7 = Algorithm(&quot;algo7&quot;)
 t = algo7.add_parameter(&quot;t&quot;)
-f, g = algo7.add_function(&quot;f&quot;, &quot;g&quot;)
-# x1 &lt;- prox(f,t)(x3)
-algo7.add_update(x1, lin.prox(f, t)(x3)) 
-# x2 &lt;- prox(g,t)(2x1 - x3)
-algo7.add_update(x2, lin.prox(g, t)(2 * x1 - x3)) 
-# x3 &lt;- x3 + x2 - x1
-algo7.add_update(x3, x3 + x2 - x1)
+x1 = algo7.add_var(&quot;x1&quot;)
+f = algo7.add_function(&quot;f&quot;)
+algo7.add_update(x1, x1 - t*lin.grad(f)(x1))
 
 algo8 = Algorithm(&quot;algo8&quot;)
+xi1, xi2 = algo8.add_var(&quot;xi1&quot;, &quot;xi2&quot;)
 t = algo8.add_parameter(&quot;t&quot;)
-f, g = algo8.add_function(&quot;f&quot;, &quot;g&quot;)
-t = algo8.add_parameter(&quot;t&quot;)
-x1, x2 = algo8.add_var(&quot;x1&quot;, &quot;x2&quot;)
-x1u = algo8.update(x1)
-algo8.set_auto(False)
-# x1+ = prox(f, t)(x1 - t * x2)
-algo8.add_update(x1, lin.prox(f, t)(x1 - t * x2))  
-# x2+ = prox(g, 1/t)(x2 + 1/t * (2x1+ - x1))
-algo8.add_update(x2, lin.prox(g, 1/t)(x2 + 1/t * (2 * x1u - x1)))
+f = algo8.add_function(&quot;f&quot;)
+
+algo8.add_update(xi2, xi1 - t*lin.grad(f)(xi1))
+algo8.add_update(xi1, xi2 - t*lin.grad(f)(xi2))
 
 algo7.parse()
 algo8.parse()
-lin.is_conjugation(algo7, algo8)
+lin.is_repetition(algo7, algo8)
 </code></pre>
+
+<p>System returns </p>
+<pre><code class="python">True
+</code></pre>
+
+<h2 id="check-conjugation-and-permutation-douglas-rachford-splitting-and-admm">Check conjugation and permutation (Douglas-Rachford splitting and ADMM)</h2>
+<p>For problem, </p>
+<p><img src="/Figures/problem.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
+<p>Douglas-Rachford splitting</p>
+<p><img src="/Figures/dr.svg?invert_in_darkmode" align=middle width="170" height="170"/></p>
+<p>ADMM</p>
+<p><img src="/Figures/admm.svg?invert_in_darkmode" align=middle width="300" height="300"/></p>
+<pre><code class="python">DR = Algorithm(&quot;Douglas-Rachford splitting&quot;)
+x1, x2, x3 = DR.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
+t = DR.add_parameter(&quot;t&quot;)
+f, g = DR.add_function(&quot;f&quot;, &quot;g&quot;)
+
+DR.add_update(x1, lin.prox(f, t)(x3)) 
+DR.add_update(x2, lin.prox(g, t)(2*x1 - x3)) 
+DR.add_update(x3, x3 + x2 - x1)
+
+ADMM = Algorithm(&quot;ADMM&quot;)
+f, g = ADMM.add_function(&quot;f&quot;, &quot;g&quot;)
+rho = ADMM.add_parameter(&quot;rho&quot;)
+xi1, xi2, xi3 = ADMM.add_var(&quot;xi1&quot;, &quot;xi2&quot;, &quot;xi3&quot;)
+
+ADMM.add_update(xi1, lin.argmin(xi1, g(xi1) + 1/2*rho*lin.norm_square(xi1 + xi2 + xi3))) 
+ADMM.add_update(xi2, lin.argmin(xi2, f(xi2) + 1/2*rho*lin.norm_square(xi1 + xi2 + xi3))) 
+ADMM.add_update(xi3, xi3 + xi1 + xi2) 
+
+DR.parse()
+ADMM.parse()
+# get a permutation of DR
+test_algo = DR.permute()
+lin.test_duality(test_algo, ADMM)
+</code></pre>
+
+<p><img src="/Figures/dr_title.svg?invert_in_darkmode" align=middle width="200" height="200"/></p>
+<p><img src="/Figures/dr_ss.svg?invert_in_darkmode" align=middle width="340" height="340"/></p>
+<p><img src="/Figures/admm_title.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
+<p><img src="/Figures/admm_ss.svg?invert_in_darkmode" align=middle width="330" height="330"/></p>
+<p><img src="/Figures/dr_admm.svg?invert_in_darkmode" align=middle width="550" height="550"/></p>
+<h2 id="check-conjugation-douglas-rachdford-splitting-and-chambolle-pock-method">Check conjugation (Douglas-Rachdford splitting and Chambolle-Pock method)</h2>
+<p>Chambolle-Pock method</p>
+<p><img src="/Figures/cp.svg?invert_in_darkmode" align=middle width="220" height="220"/></p>
+<pre><code class="python">CP = Algorithm(&quot;Chambolle-Pock method&quot;)
+f, g = CP.add_function(&quot;f&quot;, &quot;g&quot;)
+x1, x2, x3 = CP.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
+tau, sigma = CP.add_parameter(&quot;tau&quot;, &quot;sigma&quot;)
+
+CP.add_update(x3, x1)
+CP.add_update(x1, lin.prox(f, tau)(x1 - tau*x2))
+CP.add_update(x2, lin.prox(g, sigma)(x2 + sigma*(2*x1 - x3))) 
+
+CP.parse()
+lin.test_conjugation(DR, CP)
+</code></pre>
+
+<p><img src="/Figures/cp_title.svg?invert_in_darkmode" align=middle width="180" height="180"/></p>
+<p><img src="/Figures/cp_ss.svg?invert_in_darkmode" align=middle width="350" height="350"/></p>
+<p><img src="/Figures/dr_cp.svg?invert_in_darkmode" align=middle width="550" height="550"/></p>
               
             </div>
           </div>
@@ -242,7 +246,7 @@ lin.is_conjugation(algo7, algo8)
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="../identification/" class="btn btn-neutral" title="Identification"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../detection/" class="btn btn-neutral" title="Detection"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -268,7 +272,7 @@ lin.is_conjugation(algo7, algo8)
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../identification/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../detection/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
     </span>
