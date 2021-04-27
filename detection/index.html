@@ -127,12 +127,12 @@
 <h2 id="parse-an-algorithm">Parse an algorithm</h2>
 <p>Suppose an algorithm is already defined and variables, parameters, oracles, and 
 update equations are added to the algorithm, the next step is to parse the algorithm. 
-Syntax <code>parse</code> is used to translate the input algorithm into the canonical form and use 
+Syntax <code>parse</code> is used to translate the input algorithm into a canonical form (transfer function) and use 
 the canonical form to perform subsequent analysis such as equivalence detection. 
 When parsing an algorithm, the state-space realization is provided by the system. </p>
-<p>With example algorithm (gradient descent algorithm), </p>
+<p>With example of gradient descent algorithm, </p>
 <p><img src="/Figures/gradient_algo.svg?invert_in_darkmode" align=middle width="130" height="130"/></p>
-<p>The example code defines the algorithm as <code>algo3</code> and parses it into canonical form. </p>
+<p>The following code defines the gradient descent algorithm as <code>algo3</code> and parses it into canonical form. </p>
 <pre><code class="python">import linnaeus as lin
 from linnaeus import Algorithm
 
@@ -156,14 +156,14 @@ algo3.parse()
 <li>Conjugation, <code>is_conjugation()</code> and <code>test_conjugation()</code></li>
 <li>Duality, <code>is_duality()</code> and <code>test_duality()</code></li>
 </ul>
-<p>Here is a <a href="#linnaeus">brief description</a> of algorithm equivalence and relations. For more details, see our paper. 
-These functions take two arguments, one is the target algorithm to parse and the other is the 
+<p>Here is a <a href="https://linnaeus-doc.github.io/#linnaeus">brief description</a> of algorithm equivalence and relations. For more details, see our paper. 
+These functions take two arguments, the first one is the target algorithm to parse and the second is the 
 reference algorithm or a list of reference algorithms. </p>
 <p>For each type of algorithm equivalence or relations, the <code>is_</code> function returns boolean or a list of boolean, simply 
-indicating whether two algorithms are equivalent/related or not. The <code>test_</code> function returns more details. 
-Specifically, if two algorithms are equivalent/related only under specific parameter maps, the <code>test_</code> function 
-will return the parameter maps. </p>
-<p>As an example, we define the triple momentum algorithm as <code>algo4</code> and check oracle equivalence between <code>algo3</code> and <code>algo4</code>. </p>
+indicating whether the input algorithm and the reference algorithm are equivalent/related or not. The <code>test_</code> function returns more details. 
+Specifically, if two algorithms are equivalent/related only when the parameters satisfy a certain condition, the <code>test_</code> function 
+will return the condition. </p>
+<p>For illustration, we define the triple momentum algorithm as <code>algo4</code> and check oracle equivalence between <code>algo3</code> and <code>algo4</code>. </p>
 <p><img src="/Figures/triple_algo.svg?invert_in_darkmode" align=middle width="310" height="310"/></p>
 <pre><code class="python">algo4 = Algorithm(&quot;triple momentum algorithm&quot;)
 x1, x2, x3 = algo4.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
@@ -184,20 +184,20 @@ lin.is_equivalent(algo3, algo4)
 <pre><code class="python">True
 </code></pre>
 
-<p>To return the parameter maps, we can use the <code>test_equivalent()</code> function.</p>
+<p>To return the conditions for parameters that yield equivalence, we can use the <code>test_equivalent()</code> function as follows.</p>
 <pre><code class="python">lin.test_equivalent(algo3, algo4)
 </code></pre>
 
 <p><img src="/Figures/parameter.svg?invert_in_darkmode" align=middle width="600" height="600"/></p>
 <h2 id="latex-support">LaTeX support</h2>
 <p>We recommand users to use an IPython console that LaTeX is installed to check the parameter maps returned by the <code>test_</code> functions. 
-An IPython notebook also has LaTeX support. </p>
+An IPython notebook with LaTeX support is also recommanded. </p>
 <h2 id="transform-an-algorithm">Transform an algorithm</h2>
 <p>To detect complex relations, Linnaeus provides a set of functions to transform an algorithm. </p>
 <ul>
 <li><code>permute(step)</code>, returns a permutation of an algorithm with specific steps set by argument <code>step</code>. The default setting of <code>step</code> is 0, which returns the one-step permutation. <code>step</code> should be an integer and less than the total oracle number of the algorithm. </li>
 <li><code>conjugate(conjugate_oracle)</code>, returns the conjugate of an algorithm with respect to the specific oracle set by argument <code>conjugate_oracle</code>. The default setting of <code>conjugate_oracle</code> is 0, which returns the conjugate with respect to the first oracle. <code>conjugate_oracle</code> should be an integer and within the set of oracle indices of the algorithm. If an algorithm contains <code>n</code> oracles, its set of oracle indices is <code>[0, ..., n - 1]</code>.</li>
-<li><code>dual()</code>, returns the conjugate of an algorithm with repect to all the oracles. </li>
+<li><code>dual()</code>, returns the conjugate of an algorithm with respect to all the oracles. </li>
 <li><code>repeat(number)</code>, returns a repetition of an algorithm that repeats the algorithm with <code>number</code> of times. The default setting of <code>number</code> is 2, which repeats the algorithm twice. </li>
 </ul>
 <h3 id="commutative-property">Commutative property</h3>
@@ -205,7 +205,7 @@ An IPython notebook also has LaTeX support. </p>
 <li>Conjugation of different oracles commutes. </li>
 <li>Conjugation and permutation also commute. </li>
 </ul>
-<p>The example code transforms <code>new_algo</code> in different ways. </p>
+<p>The following code transforms <code>new_algo</code> in different ways. </p>
 <pre><code class="python">new_algo.permute()
 
 new_algo.conjugate(1)
@@ -215,7 +215,7 @@ new_algo.dual()
 new_algo.repeat(3)
 </code></pre>
 
-<p>Here is the <a href="#check-conjugation-and-permutation-douglas-rachford-splitting-and-admm">example</a> to detect complex relation with algorithm transformation. </p>
+<p>Here is an <a href="https://linnaeus-doc.github.io/examples/#check-conjugation-and-permutation-douglas-rachford-splitting-and-admm">example</a> demonstrating how to detect complex relations between algorithms using algorithm transformations.</p>
               
             </div>
           </div>

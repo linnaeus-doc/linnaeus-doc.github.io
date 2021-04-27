@@ -128,13 +128,13 @@
             <div class="section">
               
                 <h1 id="basic-types">Basic Types</h1>
-<p>The major building block is called an algorithm. An algorithm consists of expressions 
-including variables, parameters, functions, oracles, and update equations. Linnaeus is 
-developed based on python symbolic package sympy, and all the expressions are defined symbolically.</p>
+<p>The major building block is called an algorithm. An algorithm is defined with 
+variables, parameters, functions, oracles, and update equations. 
+All the expressions in Linnaeus are defined symbolically using SymPy. </p>
 <h2 id="algorithms">Algorithms</h2>
-<p>Algorithm is defined using the keyword <code>Algorithm</code>
+<p>Algorithm is defined using keyword <code>Algorithm</code>
 along with the name of the algorithm. </p>
-<p>For example, we define an <code>Algorithm</code> as <code>new_algo</code> named <code>my new algorithm</code>.</p>
+<p>The following code defines an <code>Algorithm</code> as <code>new_algo</code> named <code>my new algorithm</code>.</p>
 <pre><code class="python">new_algo = Algorithm(&quot;my new algorithm&quot;)
 </code></pre>
 
@@ -142,27 +142,25 @@ along with the name of the algorithm. </p>
 are all attributes to an algorithm object. 
 An algorithm must be defined before other expressions are defined and added to it. </p>
 <h2 id="variables">Variables</h2>
-<p>Variables are algorithm states. Variables are declared and added to an algorithm
-using syntax <code>add_var</code> along with the names of variables. </p>
-<p>For example, we add variables <code>x1</code> and <code>x2</code> to <code>new_algo</code>.</p>
+<p>Variables are algorithm states. They are declared and added to an algorithm
+using syntax <code>add_var</code> along with the names of the variables. </p>
+<p>In the following example, we add variables <code>x1</code> and <code>x2</code> to <code>new_algo</code>.</p>
 <pre><code class="python">x1, x2 = new_algo.add_var(&quot;x1&quot;, &quot;x2&quot;)
 </code></pre>
 
-<p>Each algorithm state must be updated at each iteration. The
+<p>Each algorithm state (each variable) must be updated at each iteration. The
 updated variables can be accessed by syntax <code>update</code>. </p>
-<p>For example, we access the updated <code>x1</code> with <code>x1u</code> and updated <code>x2</code> with <code>x2u</code>. </p>
+<p>Here we access the updated <code>x1</code> with <code>x1u</code> and updated <code>x2</code> with <code>x2u</code> in the following code. </p>
 <pre><code class="python">x1u, x2u = new_algo.update(x1, x2)
 </code></pre>
 
 <h2 id="parameters">Parameters</h2>
-<p>Parameters can be a scalar, a vector, or a matrix. The main difference between a scalar and
-a vector or a matrix is whether it is commutative. Parameters can be declared and added 
-to an algorithm using syntax <code>add_parameter</code> along with the names of parameters. 
-To add a vector or a matrix, the argument <code>commutative</code> should be set as <code>False</code>. 
+<p>Parameters of an algorithm can be declared as scalar (commutative) or vector or matrix (noncommutative). 
+Parameters are declared and added to an algorithm using syntax <code>add_parameter</code> along with the names of parameters. 
+To add a vector or matrix, the argument <code>commutative</code> should be set as <code>False</code>. 
 The default setting of argument <code>commutative</code> is <code>True</code>. 
-It is unnecessary to specify the size of the vector or the matrix, since they are all 
-regarded as abstract expressions. </p>
-<p>For example, we add a scalar <code>t</code> and matrix <code>L</code> to <code>new_algo</code>.</p>
+There is no need to specialize the dimensions of vectors or matrices, since they are symbolic. </p>
+<p>The following code shows how to add scalar <code>t</code> and matrix <code>L</code> to <code>new_algo</code>.</p>
 <pre><code class="python">t = new_algo.add_parameter(&quot;t&quot;)
 L = new_algo.add_parameter(&quot;L&quot;, commutative = False)
 </code></pre>
@@ -171,23 +169,22 @@ L = new_algo.add_parameter(&quot;L&quot;, commutative = False)
 <p>Linnaeus provides two approaches to declare and add oracles 
 to an algorithm. </p>
 <h4 id="black-box-approach">Black-box approach</h4>
-<p>The first approach is to define oracles as black boxes. 
-When parsing the algorithm, the system treats each oracle as a whole and does not care what 
-happens inside each oracle. 
-Under this approach, an oracle can be declared using syntax <code>add_oracle</code>.</p>
-<p>For example, we declare oracles gradient of <code>f</code> and proximal operator of <code>g</code>.</p>
+<p>The black-box approach is to define oracles as black boxes. 
+When parsing the algorithm, the system treats each oracle as a distinct entity unrelated to any other oracle. 
+An oracle declared using syntax <code>add_oracle</code> uses the black-box approach</p>
+<p>For example, we declare oracles gradient of <code>f</code> and proximal operator of <code>g</code> with the following code.</p>
 <pre><code class="python">gradf = new_algo.add_oracle(&quot;gradf&quot;)
 proxg = new_algo.add_oracle(&quot;proxg&quot;)
 </code></pre>
 
-<h4 id="subgradient-approach">(Sub)gradient approach</h4>
-<p>The second approach is to define oracles in the level of (sub)gradients. 
-This approach is important especially when detecting conjugation between algorithms. 
+<h4 id="functional-approach">Functional approach</h4>
+<p>The functional approach is to define oracles in terms of the (sub)gradient of a function. 
 When parsing an algorithm, all the oracles will be decomposed into (sub)gradients. 
-This <a href="#check-conjugation-and-permutation-douglas-rachford-splitting-and-admm">example</a> shows the details. 
-Under this approach, functions must be defined and added to the algorithm before defining 
-oracles. Syntax <code>add_function</code> is used to declare and add functions to an algorithm. </p>
-<p>For example, we define function <code>f</code> and add it to <code>new_algo</code></p>
+This approach is important to allow detection algorithm conjugation. 
+This <a href="https://linnaeus-doc.github.io/examples/#check-conjugation-and-permutation-douglas-rachford-splitting-and-admm">example</a> shows the details. 
+With the functional approach, functions must be defined and added to the algorithm 
+using syntax <code>add_function</code> before defining oracles.</p>
+<p>The following example shows to define function <code>f</code> and add it to <code>new_algo</code></p>
 <pre><code class="python">f = new_algo.add_function(&quot;f&quot;)
 </code></pre>
 
@@ -218,12 +215,12 @@ An update equation is defined with syntax <code>add_update</code>. </p>
 new_algo.add_update(x2, x1 + proxg(x1)) 
 </code></pre>
 
-<p>The update equations in the example are interpreted as </p>
+<p>The update equations in the above example are interpreted as </p>
 <p><img src="/Figures/interpretation1.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
-<p>Or using equalities, </p>
+<p>Or interpreted as equalities, </p>
 <p><img src="/Figures/interpretation2.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
 <p>By default setting, variables which have already been updated will be substituted with their
-updated versions. Thus, <code>x1</code> in the second update equation is interpreted as the updated <code>x1</code>, as the <code>x1^+</code> in 
+updated versions. Thus, <code>x1</code> in the second update equation is considered as the updated <code>x1</code>, as the <code>x1^+</code> in 
 the second equality interpretation. </p>
 <p>For some cases, we can change the default setting by syntax <code>set_auto</code>, such as </p>
 <pre><code class="python">new_algo.set_auto(False)
@@ -234,7 +231,7 @@ new_algo.add_update(x2, x1 + proxg(x1))
 <p>Under this setting, we have a different interpretation of the update equations, </p>
 <p><img src="/Figures/interpretation3.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
 <h2 id="warning">Warning!</h2>
-<p>To avoid overlap and misleading in expressions, it is highly recommanded that each algorithm should have its own expressions such as own variables, parameters, etc, and those expressions should only be used within this algorithm!</p>
+<p>To avoid overlap and misleading in expressions, it is highly recommanded that each algorithm should have its own variables, parameters, etc, and those expressions should only be used within this algorithm!</p>
 <p>For example, </p>
 <pre><code class="python">algo1 = Algorithm(&quot;my first algorithm&quot;)
 x1, x2 = algo1.add_var(&quot;x1&quot;, &quot;x2&quot;)
