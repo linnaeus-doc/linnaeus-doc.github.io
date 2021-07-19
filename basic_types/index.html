@@ -95,6 +95,21 @@
     <a class="" href="../examples/">Examples</a>
 	    </li>
           
+            <li class="toctree-l1">
+		
+    <a class="" href="../library/">Algorithm Library</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../contributing/">Contributing</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../citation/">Citing Linnaeus</a>
+	    </li>
+          
         </ul>
       </div>
       &nbsp;
@@ -165,6 +180,12 @@ There is no need to specialize the dimensions of vectors or matrices, since they
 L = new_algo.add_parameter(&quot;L&quot;, commutative = False)
 </code></pre>
 
+<h4 id="warning-for-noncommutative-parameters">Warning for noncommutative parameters</h4>
+<p>Due to limited support for noncommutative symbol calculation in SymPy, 
+Linnaeus may not correctly parse extremely complex algorithms including noncommutative symbols. 
+It is also possible that Linnaeus may not get the parameter mapping for noncommutative symbols (matrices or vectors) 
+when detecting equivalence for such algorithms. 
+In such cases, we recommand users to declare all the parameters as commutative symbols! </p>
 <h2 id="oracles">Oracles</h2>
 <p>Linnaeus provides two approaches to declare and add oracles 
 to an algorithm. </p>

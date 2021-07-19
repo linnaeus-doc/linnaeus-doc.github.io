@@ -68,13 +68,13 @@
     <a class="current" href="./">Detection</a>
     <ul class="subnav">
             
-    <li class="toctree-l2"><a href="#detection">Detection</a></li>
+    <li class="toctree-l2"><a href="#equivalence-detection">Equivalence Detection</a></li>
     
         <ul>
         
             <li><a class="toctree-l3" href="#parse-an-algorithm">Parse an algorithm</a></li>
         
-            <li><a class="toctree-l3" href="#detection_1">Detection</a></li>
+            <li><a class="toctree-l3" href="#detection">Detection</a></li>
         
             <li><a class="toctree-l3" href="#latex-support">LaTeX support</a></li>
         
@@ -89,6 +89,21 @@
             <li class="toctree-l1">
 		
     <a class="" href="../examples/">Examples</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../library/">Algorithm Library</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../contributing/">Contributing</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../citation/">Citing Linnaeus</a>
 	    </li>
           
         </ul>
@@ -123,13 +138,13 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="detection">Detection</h1>
+                <h1 id="equivalence-detection">Equivalence Detection</h1>
 <h2 id="parse-an-algorithm">Parse an algorithm</h2>
 <p>Suppose an algorithm is already defined and variables, parameters, oracles, and 
 update equations are added to the algorithm, the next step is to parse the algorithm. 
 Syntax <code>parse</code> is used to translate the input algorithm into a canonical form (transfer function) and use 
 the canonical form to perform subsequent analysis such as equivalence detection. 
-When parsing an algorithm, the state-space realization is provided by the system. </p>
+When parsing an algorithm, the update equations are provided by the system. </p>
 <p>With example of gradient descent algorithm, </p>
 <p><img src="/Figures/gradient_algo.svg?invert_in_darkmode" align=middle width="130" height="130"/></p>
 <p>The following code defines the gradient descent algorithm as <code>algo3</code> and parses it into canonical form. </p>
@@ -147,7 +162,7 @@ algo3.parse()
 
 <p><img src="/Figures/gradient_title.svg?invert_in_darkmode" align=middle width="200" height="200"/></p>
 <p><img src="/Figures/gradient_ss.svg?invert_in_darkmode" align=middle width="240" height="240"/></p>
-<h2 id="detection_1">Detection</h2>
+<h2 id="detection">Detection</h2>
 <p>Linnaeus provides a set of functions to check algorithm equivalence and relations. </p>
 <ul>
 <li>Oracle equivalence and linear transform, <code>is_equivalent()</code> and <code>test_equivalence()</code> </li>
@@ -156,7 +171,8 @@ algo3.parse()
 <li>Conjugation, <code>is_conjugation()</code> and <code>test_conjugation()</code></li>
 <li>Duality, <code>is_duality()</code> and <code>test_duality()</code></li>
 </ul>
-<p>Here is a <a href="https://linnaeus-doc.github.io/#linnaeus">brief description</a> of algorithm equivalence and relations. For more details, see our paper. 
+<p>Here is a <a href="https://linnaeus-doc.github.io/#linnaeus">brief description</a> of algorithm equivalence and relations. 
+For more details, see <a href="https://arxiv.org/abs/2105.04684">our paper</a>. 
 These functions take two arguments, the first one is the target algorithm to parse and the second is the 
 reference algorithm or a list of reference algorithms. </p>
 <p>For each type of algorithm equivalence or relations, the <code>is_</code> function returns boolean or a list of boolean, simply 
@@ -189,6 +205,17 @@ lin.is_equivalent(algo3, algo4)
 </code></pre>
 
 <p><img src="/Figures/parameter.svg?invert_in_darkmode" align=middle width="600" height="600"/></p>
+<h4 id="multiple-relations">Multiple relations</h4>
+<p>It is possible that algorithms are related with multiple relations. 
+In such cases, one algorithm can be transformed into another by sequentially performing 
+multiple aforementioned transformations. </p>
+<p>Here is an <a href="https://linnaeus-doc.github.io/examples/#check-conjugation-and-permutation-douglas-rachford-splitting-and-admm">example</a> 
+to detect conjugation and permutation between Douglas-Rachford splitting and ADMM. 
+In this example, Douglas-Rachford splitting can be transformed to ADMM, by performing conjugation and permutation. 
+(Since conjugation and permutation commute, the sequence does not matter.)</p>
+<p>Linnaeus provides two functions <code>is_conjugate_permutation()</code> and <code>test_conjugate_permutation()</code> 
+to detect conjugation and permutation together. 
+The input and output for these functions are the same as the aforementioned detection functions. </p>
 <h2 id="latex-support">LaTeX support</h2>
 <p>We recommand users to use an IPython console that LaTeX is installed to check the parameter maps returned by the <code>test_</code> functions. 
 An IPython notebook with LaTeX support is also recommanded. </p>
@@ -198,12 +225,7 @@ An IPython notebook with LaTeX support is also recommanded. </p>
 <li><code>permute(step)</code>, returns a permutation of an algorithm with specific steps set by argument <code>step</code>. The default setting of <code>step</code> is 0, which returns the one-step permutation. <code>step</code> should be an integer and less than the total oracle number of the algorithm. </li>
 <li><code>conjugate(conjugate_oracle)</code>, returns the conjugate of an algorithm with respect to the specific oracle set by argument <code>conjugate_oracle</code>. The default setting of <code>conjugate_oracle</code> is 0, which returns the conjugate with respect to the first oracle. <code>conjugate_oracle</code> should be an integer and within the set of oracle indices of the algorithm. If an algorithm contains <code>n</code> oracles, its set of oracle indices is <code>[0, ..., n - 1]</code>.</li>
 <li><code>dual()</code>, returns the conjugate of an algorithm with respect to all the oracles. </li>
-<li><code>repeat(number)</code>, returns a repetition of an algorithm that repeats the algorithm with <code>number</code> of times. The default setting of <code>number</code> is 2, which repeats the algorithm twice. </li>
-</ul>
-<h3 id="commutative-property">Commutative property</h3>
-<ul>
-<li>Conjugation of different oracles commutes. </li>
-<li>Conjugation and permutation also commute. </li>
+<li><code>repeat(times)</code>, returns a repetition of an algorithm that repeats the algorithm with <code>times</code> of times. The default setting of <code>times</code> is 2, which repeats the algorithm twice. <code>times</code> should be an positive integer. </li>
 </ul>
 <p>The following code transforms <code>new_algo</code> in different ways. </p>
 <pre><code class="python">new_algo.permute()
@@ -215,7 +237,9 @@ new_algo.dual()
 new_algo.repeat(3)
 </code></pre>
 
-<p>Here is an <a href="https://linnaeus-doc.github.io/examples/#check-conjugation-and-permutation-douglas-rachford-splitting-and-admm">example</a> demonstrating how to detect complex relations between algorithms using algorithm transformations.</p>
+<p>For example, we can get the state-space realization for the permutation of <code>new_algo</code> as follows,</p>
+<pre><code class="python">new_algo.permute().get_ss()
+</code></pre>
               
             </div>
           </div>

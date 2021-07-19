@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>Quick Tutorial - Linnaeus</title>
+  <title>Algorithm Library - Linnaeus</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Quick Tutorial";
-    var mkdocs_page_input_path = "quick_tutorial.md";
+    var mkdocs_page_name = "Algorithm Library";
+    var mkdocs_page_input_path = "library.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -53,15 +53,9 @@
     <a class="" href="..">Home</a>
 	    </li>
           
-            <li class="toctree-l1 current">
+            <li class="toctree-l1">
 		
-    <a class="current" href="./">Quick Tutorial</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l2"><a href="#quick-tutorial">Quick Tutorial</a></li>
-    
-
-    </ul>
+    <a class="" href="../quick_tutorial/">Quick Tutorial</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -79,9 +73,15 @@
     <a class="" href="../examples/">Examples</a>
 	    </li>
           
-            <li class="toctree-l1">
+            <li class="toctree-l1 current">
 		
-    <a class="" href="../library/">Algorithm Library</a>
+    <a class="current" href="./">Algorithm Library</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#algorithm-library">Algorithm Library</a></li>
+    
+
+    </ul>
 	    </li>
           
             <li class="toctree-l1">
@@ -116,7 +116,7 @@
     
       
     
-    <li>Quick Tutorial</li>
+    <li>Algorithm Library</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -126,72 +126,37 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="quick-tutorial">Quick Tutorial</h1>
-<p>In this quick tutorial, we define two algorithms and show that they are oracle-equivalent. </p>
-<p>The first algorithm, </p>
-<p><img src="/Figures/algo1.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
-<p>Import <code>linnaeus</code> and <code>Algorithm</code> class,</p>
+                <h1 id="algorithm-library">Algorithm Library</h1>
+<p>Linnaeus includes an algorithm library to serve as a reference. 
+Users can check the potential relations between the input algorithm and reference algorithms in the library. 
+The algorithms can be accessed through name abbreviations. 
+Currently, the algorithm library includes:</p>
+<ul>
+<li>Gradient descent method, accessed by <code>Gr</code></li>
+<li><a href="">Nesterov's accelerated gradient method</a>, accessed by <code>Ng</code></li>
+<li><a href="">Heavy-ball method</a>, accessed by <code>Hb</code></li>
+<li><a href="">Triple momentum algorithm</a>, accessed by <code>Tm</code></li>
+<li><a href="">Proximal point method</a>, accessed by <code>Pp</code></li>
+<li><a href="">Proximal point method with relaxation</a>, accessed by <code>Pp_r</code></li>
+<li><a href="">Proximal gradient method</a>, accessed by <code>Pg</code></li>
+<li><a href="">Douglas-Rachford splitting</a>, accessed by <code>Dr</code></li>
+<li><a href="">Permutation of Douglas-Rachford splitting</a>, accessed by <code>Dr_p</code></li>
+<li><a href="">Peaceman-Rachford splitting method</a>, accessed by <code>Pr</code></li>
+<li><a href="">Alternating direction method of multipliers (ADMM)</a>, accessed by <code>Admm</code></li>
+<li><a href="">Chambolle-Pock method</a>, accessed by <code>Cp</code></li>
+<li><a href="">Davis-Yin splitting method</a>, accessed by <code>Dy</code></li>
+<li><a href="">Extragradient method</a>, accessed by <code>Eg</code></li>
+<li><a href="">Extragradient method by Korpelevich and Antipin</a>, accessed by <code>Eg_ka</code></li>
+<li><a href="">Extragradient method by Tseng</a>, accessed by <code>Eg_t</code></li>
+<li><a href="">Reflected gradient method by Malitsky</a>, accessed by <code>Rl</code></li>
+</ul>
+<p>The following code checks equivalence between 
+Gradient descent method and Triple momentum method in the library. </p>
 <pre><code class="python">import linnaeus as lin
-from linnaeus import Algorithm
+lin.is_equivalent(lin.Gr, lin.Tm)
 </code></pre>
 
-<p>Define the first algorithm as <code>algo1</code> with name <code>Algoritm 1</code>,</p>
-<pre><code class="python">algo1 = Algorithm(&quot;Algorithm 1&quot;)
-</code></pre>
-
-<p>Add variables <code>x1</code>, <code>x2</code>, and <code>x3</code> to <code>algo1</code>,</p>
-<pre><code class="python">x1, x2, x3 = algo1.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
-</code></pre>
-
-<p>Add oracle <code>gradf</code>, gradient of <code>f</code> to <code>algo1</code>,</p>
-<pre><code class="python">gradf = algo1.add_oracle(&quot;gradf&quot;)
-</code></pre>
-
-<p>Add update equations:</p>
-<pre><code class="python"># x3 &lt;- 2x1 - x2 
-algo1.add_update(x3, 2*x1 - x2)  
-# x2 &lt;- x1
-algo1.add_update(x2, x1)  
-# x1 &lt;- x3 - 1/10*gradf(x3)
-algo1.add_update(x1, x3 - 1/10*gradf(x3))  
-</code></pre>
-
-<p>Parse <code>algo1</code>:</p>
-<pre><code class="python">algo1.parse()
-</code></pre>
-
-<p>System parses <code>algo1</code> and returns the update equations, </p>
-<p><img src="/Figures/title1.svg?invert_in_darkmode" align=middle width="75" height="75"/></p>
-<p><img src="/Figures/output1.svg?invert_in_darkmode" align=middle width="170" height="170"/></p>
-<p>The second algorithm,</p>
-<p><img src="/Figures/algo2.svg?invert_in_darkmode" align=middle width="150" height="150"/></p>
-<p>Define the second algorithm as <code>algo2</code> and parse it:</p>
-<pre><code class="python">algo2 = Algorithm(&quot;Algorithm 2&quot;)
-xi1 = algo2.add_var(&quot;xi1&quot;)
-gradf = algo2.add_oracle(&quot;gradf&quot;)
-
-# xi3 &lt;- xi1
-algo2.add_update(xi3, xi1)
-# xi1 &lt;- xi1 - xi2 - 1/5*gradf(xi1)
-algo2.add_update(xi1, xi1 - xi2 - 1/5*gradf(xi3))  
-# xi2 &lt;- xi2 + 1/10*gradf(xi3)
-algo2.add_update(xi2, xi2 + 1/10*gradf(xi3))  
-
-algo2.parse()
-</code></pre>
-
-<p>System parses <code>algo2</code> and returns the update equations,</p>
-<p><img src="/Figures/title2.svg?invert_in_darkmode" align=middle width="75" height="75"/></p>
-<p><img src="/Figures/output2.svg?invert_in_darkmode" align=middle width="175" height="175"/></p>
-<p>Check oracle equivalence : </p>
-<pre><code class="python">lin.is_equivalent(algo1, algo2)
-</code></pre>
-
-<p>System returns </p>
-<pre><code class="python">True
-</code></pre>
-
-<p>which shows that <code>algo1</code> and <code>algo2</code> are oracle-equivalent. </p>
+<p>The results are the same as the <a href="https://linnaeus-doc.github.io/equivalence_detection/#detection">previous example</a>. </p>
               
             </div>
           </div>
@@ -199,10 +164,10 @@ algo2.parse()
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../basic_types/" class="btn btn-neutral float-right" title="Basic Types">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../contributing/" class="btn btn-neutral float-right" title="Contributing">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../examples/" class="btn btn-neutral" title="Examples"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -228,10 +193,10 @@ algo2.parse()
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../examples/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../basic_types/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../contributing/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
