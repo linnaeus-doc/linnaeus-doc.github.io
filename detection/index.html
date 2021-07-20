@@ -160,8 +160,8 @@ algo3.add_update(x1, x1 - t*gradf(x1))
 algo3.parse()
 </code></pre>
 
-<p><img src="/Figures/gradient_title.svg?invert_in_darkmode" align=middle width="200" height="200"/></p>
-<p><img src="/Figures/gradient_ss.svg?invert_in_darkmode" align=middle width="240" height="240"/></p>
+<p><img src="/Figures/gradient_title.svg?invert_in_darkmode" align=middle width="210" height="210"/></p>
+<p><img src="/Figures/gradient_eq.svg?invert_in_darkmode" align=middle width="140" height="140"/></p>
 <h2 id="detection">Detection</h2>
 <p>Linnaeus provides a set of functions to check algorithm equivalence and relations. </p>
 <ul>
@@ -183,7 +183,7 @@ will return the condition. </p>
 <p><img src="/Figures/triple_algo.svg?invert_in_darkmode" align=middle width="310" height="310"/></p>
 <pre><code class="python">algo4 = Algorithm(&quot;triple momentum algorithm&quot;)
 x1, x2, x3 = algo4.add_var(&quot;x1&quot;, &quot;x2&quot;, &quot;x3&quot;)
-alpha, beta, eta = algo4.add_var(&quot;alpha&quot;, &quot;beta&quot;, &quot;eta&quot;)
+alpha, beta, eta = algo4.add_parameter(&quot;alpha&quot;, &quot;beta&quot;, &quot;eta&quot;)
 gradf = algo4.add_oracle(&quot;gradf&quot;)
 
 algo4.add_update(x3, x1)
@@ -194,8 +194,8 @@ algo4.parse()
 lin.is_equivalent(algo3, algo4)
 </code></pre>
 
-<p><img src="/Figures/triple_title.svg?invert_in_darkmode" align=middle width="200" height="200"/></p>
-<p><img src="/Figures/triple_ss.svg?invert_in_darkmode" align=middle width="340" height="340"/></p>
+<p><img src="/Figures/triple_title.svg?invert_in_darkmode" align=middle width="210" height="210"/></p>
+<p><img src="/Figures/triple_eq.svg?invert_in_darkmode" align=middle width="340" height="340"/></p>
 <p>The system returns </p>
 <pre><code class="python">True
 </code></pre>
@@ -205,6 +205,17 @@ lin.is_equivalent(algo3, algo4)
 </code></pre>
 
 <p><img src="/Figures/parameter.svg?invert_in_darkmode" align=middle width="600" height="600"/></p>
+<h4 id="double-check">Double check</h4>
+<p>Under very occasional cases, Linnaeus may not be able to identify equivalence and relations between algorithms. 
+This is due to limitations of SymPy equation solver. 
+In such cases, we recommand users to do double check with the detection functions while exchange the input algorithm 
+and the reference algorithm. </p>
+<p>For example, the following code shows to do double check for equivalence between <code>algo3</code> and <code>algo4</code>.</p>
+<pre><code class="python">lin.is_equivalent(algo3, algo4)
+# exchange the input algorithm and the reference algorithm
+lin.is_equivalent(algo4, algo3)
+</code></pre>
+
 <h4 id="multiple-relations">Multiple relations</h4>
 <p>It is possible that algorithms are related with multiple relations. 
 In such cases, one algorithm can be transformed into another by sequentially performing 
