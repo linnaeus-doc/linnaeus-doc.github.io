@@ -78,6 +78,8 @@
         
             <li><a class="toctree-l3" href="#latex-support">LaTeX support</a></li>
         
+            <li><a class="toctree-l3" href="#access-state-space-realization-and-transfer-function">Access state-space realization and transfer function</a></li>
+        
             <li><a class="toctree-l3" href="#transform-an-algorithm">Transform an algorithm</a></li>
         
         </ul>
@@ -230,6 +232,42 @@ The input and output for these functions are the same as the aforementioned dete
 <h2 id="latex-support">LaTeX support</h2>
 <p>We recommand users to use an IPython console that LaTeX is installed to check the parameter maps returned by the <code>test_</code> functions. 
 An IPython notebook with LaTeX support is also recommanded. </p>
+<h2 id="access-state-space-realization-and-transfer-function">Access state-space realization and transfer function</h2>
+<h4 id="state-space-realization">State-space realization</h4>
+<p>Function <code>get_ss(verbose)</code> returns the state-space realization of an algorithm. 
+If <code>verbose</code> is <code>False</code>, it will return a big matrix containing state-space matrices A, B, C, and D. 
+If <code>verbose</code> is <code>True</code>, it will explicitly indicate the A, B, C, and D matrices. 
+The default setting of <code>verbose</code> is <code>False</code>.</p>
+<p>The following example shows to get the state-space realization of the triple momentum algorithm, <code>algo4</code>.</p>
+<pre><code class="python">algo4.get_ss()
+</code></pre>
+
+<p><img src="/Figures/whole_ss.svg?invert_in_darkmode" align=middle width="150" height="150"/></p>
+<pre><code class="python">algo4.get_ss(verbose = True)
+</code></pre>
+
+<p><img src="/Figures/ss_title.svg?invert_in_darkmode" align=middle width="160" height="160"/></p>
+<p><img src="/Figures/triple_ss.svg?invert_in_darkmode" align=middle width="350" height="350"/></p>
+<p>Specifically, function <code>get_canonical_ss(ss_type, verbose)</code> returns the canonical form of 
+the state-space realization. </p>
+<p>If <code>ss_type</code> is <code>'c'</code>, it will return the controllable canonical form; 
+and if <code>ss_type</code> is <code>'o'</code>, it will return the observable canonical form. 
+The default setting is <code>'c'</code>.
+More details about controlable and observable canonical forms can be found <a href="https://faculty.washington.edu/chx/teaching/me547/1-6_ss_realization_slides.pdf">here</a>. </p>
+<p><code>verbose</code> is the same as function <code>get_ss()</code>. </p>
+<p>The following example shows to get the observable canonical form of state-space realization of the triple momentum algorithm, <code>algo4</code>.</p>
+<pre><code class="python">algo4.get_canonical_ss(ss_type = 'o', verbose = True)
+</code></pre>
+
+<p><img src="/Figures/observable_title.svg?invert_in_darkmode" align=middle width="220" height="220"/></p>
+<p><img src="/Figures/observable_ss.svg?invert_in_darkmode" align=middle width="350" height="350"/></p>
+<h4 id="transfer-function">Transfer function</h4>
+<p>Function <code>get_tf()</code> returns the transfer function of an algorithm.</p>
+<p>The following code shows to get the transfer function of the triple momentum algorithm, <code>algo4</code>.</p>
+<pre><code class="python">algo4.get_tf()
+</code></pre>
+
+<p><img src="/Figures/tf.svg?invert_in_darkmode" align=middle width="130" height="130"/></p>
 <h2 id="transform-an-algorithm">Transform an algorithm</h2>
 <p>To detect complex relations, Linnaeus provides a set of functions to transform an algorithm. </p>
 <ul>
