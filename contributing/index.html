@@ -85,12 +85,6 @@
             
     <li class="toctree-l2"><a href="#contributing">Contributing</a></li>
     
-        <ul>
-        
-            <li><a class="toctree-l3" href="#add-new-algorithm-to-library">Add new algorithm to library</a></li>
-        
-        </ul>
-    
 
     </ul>
 	    </li>
@@ -135,15 +129,15 @@
                 <h1 id="contributing">Contributing</h1>
 <p>Linnaeus is an open-source project open to any academic or commercial applications. 
 Contributions are welcome as <a href="https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request">GitHub pull requests</a> in any part of the project. </p>
-<h2 id="add-new-algorithm-to-library">Add new algorithm to library</h2>
+<p>A## Add new algorithm to the library</p>
 <p>If you believe that an algorithm is important and not included in the library of Linnaeus, 
 you are welcome to submit a GitHub pull request named as <code>Adding new algorithm XXX</code>, 
-where <code>XXX</code> is the name of the new algorithm. 
-To add a new algorithm, you need to edit the <code>algorithms_library.py</code> file under <code>linnaeus/</code> directory. 
+where <code>XXX</code> is the name of the new algorithm. </p>
+<p>To add a new algorithm, you need to edit the <code>algorithms_library.py</code> file under <code>linnaeus/</code> directory as the following Chambolle-Pock method example. 
 New algorithm should be added at the end of the file. </p>
-<p>The procedures to add a new algorithm are generally the same 
+<p>The procedures to load a new algorithm are generally the same 
 as the steps to input and parse an algorithm in Linnaeus as stated in <a href="https://linnaeus-doc.github.io/quick_tutorial/">quick tutorial</a>. </p>
-<p>The following code shows to add Chambolle-Pock method to the library. </p>
+<p>The following code shows how to load the Chambolle-Pock method to the library. </p>
 <pre><code class="python"># define name &quot;Chambolle-Pock method&quot; and name string &quot;Cp&quot;
 Cp = Algorithm(&quot;Chambolle-Pock method&quot;, &quot;Cp&quot;)
 
@@ -168,13 +162,14 @@ Cp.equation_string = r&quot;&quot;&quot;
  x_3^+ = x_3 + \theta (x_1^{+} - x_3) \\ 
  x_4^+ = x_4 + \theta (x_2^+ - x_4) 
     &quot;&quot;&quot;
-# insert Chambolle-Pock method to library
-algo_library.library_insert(Cp)
+# load the Chambolle-Pock method to library
+algo_library.load_algo(Cp)
 
 </code></pre>
 
 <p>To avoid overlap in algorithms, we highly recommand you to <a href="https://linnaeus-doc.github.io/detection/#detection">check equivalence and relations</a>
 between the new algorithm and existing algorithms in the library to ensure uniqueness. </p>
+<p>Function <code>analyze()</code> can be used to detect possible connections between the new algorithm and all existing algorithms in the library. </p>
               
             </div>
           </div>
