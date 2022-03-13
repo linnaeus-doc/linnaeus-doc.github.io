@@ -233,7 +233,7 @@ lin.argmin(x, f(x) + g(x))
 structure that an updated variable equals an expression of variables, parameters, and oracles. 
 An update equation is defined with syntax <code>add_update</code>. </p>
 <pre><code class="python">new_algo.add_update(x1, x2 - gradf(x2)) 
-new_algo.add_update(x2, x1 + proxg(x1)) 
+new_algo.add_update(x2, x1 - proxg(x1)) 
 </code></pre>
 
 <p>The update equations in the above example are interpreted as </p>
@@ -246,7 +246,7 @@ the second equality interpretation. </p>
 <p>For some cases, we can change the default setting by syntax <code>set_auto</code>, such as </p>
 <pre><code class="python">new_algo.set_auto(False)
 new_algo.add_update(x1, x2 - gradf(x2)) 
-new_algo.add_update(x2, x1 + proxg(x1)) 
+new_algo.add_update(x2, x1 - proxg(x1)) 
 </code></pre>
 
 <p>Under this setting, we have a different interpretation of the update equations, </p>

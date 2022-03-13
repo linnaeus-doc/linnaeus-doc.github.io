@@ -167,7 +167,7 @@ algo1.add_update(x1, x3 - 1/10*gradf(x3))
 <p><img src="/Figures/algo2.svg?invert_in_darkmode" align=middle width="150" height="150"/></p>
 <p>Define the second algorithm as <code>algo2</code> and parse it:</p>
 <pre><code class="python">algo2 = Algorithm(&quot;Algorithm 2&quot;)
-xi1 = algo2.add_var(&quot;xi1&quot;)
+xi1, xi2, xi3 = algo2.add_var(&quot;xi1&quot;, &quot;xi2&quot;, &quot;xi3&quot;)
 gradf = algo2.add_oracle(&quot;gradf&quot;)
 
 # xi3 &lt;- xi1
